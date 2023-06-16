@@ -1,0 +1,30 @@
+### signup as jodi
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+  "firstName": "Jodi",
+  "lastName": "Chan",
+  "email": "jodi-trial@gmail.com",
+  "password": "123",
+  "isAdmin": true
+}
+
+### signup as vik
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+  "firstName": "Vik",
+  "lastName": "Srivasata",
+  "email": "vik@gmail.com",
+  "password": "123"
+}
+### signin
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "vik@gmail.com",
+  "password": "123"
+}

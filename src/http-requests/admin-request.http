@@ -1,0 +1,41 @@
+### signin as jodi (admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "jodi@gmail.com",
+  "password": "123"
+}
+
+### signin as vik (non-admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "vik@gmail.com",
+  "password": "123"
+}
+
+### get all admins
+GET http://localhost:3000/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### get admin by id
+GET http://localhost:3000/admin/4eed901a-f85f-4fd1-a085-478337e20031
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### get all users
+GET http://localhost:3000/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### get users, approved or not
+GET http://localhost:3000/admin/users/isApproved/true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### approve, or not, user creation
+POST http://localhost:3000/admin/user/4eed901a-f85f-4fd1-a085-478337e20031/approve/true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### approve admin rights, or not, for approved users
+POST http://localhost:3000/admin/user/4eed901a-f85f-4fd1-a085-478337e20031/makeAdmin/true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic

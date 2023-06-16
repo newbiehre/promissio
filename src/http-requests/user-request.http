@@ -1,0 +1,46 @@
+### signin as jodi (admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "jodi@gmail.com",
+  "password": "123"
+}
+
+### signin as vik (non-admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "vik@gmail.com",
+  "password": "123"
+}
+
+### get self
+GET http://localhost:3000/user/self
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### update self
+PUT http://localhost:3000/user/self
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+Content-Type: application/json
+
+{
+  "firstName": "Jodi",
+  "lastName": "Chan",
+  "email": "jodi@gmail.com",
+  "password": "123"
+}
+
+### get all approved users
+GET http://localhost:3000/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### get user by email
+GET http://localhost:3000/user/by-email
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+Content-Type: application/json
+
+{
+  "email": "jodi@gmail.com"
+}

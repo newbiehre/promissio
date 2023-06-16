@@ -1,0 +1,50 @@
+### signin as jodi (admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "jodi@gmail.com",
+  "password": "123"
+}
+
+### signin as vik (non-admin)
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "vik@gmail.com",
+  "password": "123"
+}
+
+### get all users
+GET http://localhost:3000/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmY5ZDA5NC01ZGFmLTRhZjktYmNmNi05ODhhNTYwNzhlNDMiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY5MDM1MDIsImV4cCI6MTY4Njk3MzU2Mn0._kV2PL9siZIN-OwrSsc0QPTv06hUqLn2IIQ5UpHPMF0
+
+### create a promise
+POST http://localhost:3000/promise
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmY5ZDA5NC01ZGFmLTRhZjktYmNmNi05ODhhNTYwNzhlNDMiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY5MDM1MDIsImV4cCI6MTY4Njk3MzU2Mn0._kV2PL9siZIN-OwrSsc0QPTv06hUqLn2IIQ5UpHPMF0
+Content-Type: application/json
+
+{
+  "email": "vik@gmail.com",
+  "title": "My First Promise",
+  "description": "Birthday",
+  "ocassion": "Birthday"
+}
+
+### get all of my promises
+GET http://localhost:3000/promise
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmY5ZDA5NC01ZGFmLTRhZjktYmNmNi05ODhhNTYwNzhlNDMiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY5MDM1MDIsImV4cCI6MTY4Njk3MzU2Mn0._kV2PL9siZIN-OwrSsc0QPTv06hUqLn2IIQ5UpHPMF0
+
+### get promise by id
+GET http://localhost:3000/promise/7221973c-1c35-4f29-8279-1683591178ed
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
+
+### update status of a promise
+PUT http://localhost:3000/promise/7fceb776-df00-44e5-babe-816a96c05cdf
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmY5ZDA5NC01ZGFmLTRhZjktYmNmNi05ODhhNTYwNzhlNDMiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY5MDM1MDIsImV4cCI6MTY4Njk3MzU2Mn0._kV2PL9siZIN-OwrSsc0QPTv06hUqLn2IIQ5UpHPMF0
+Content-Type: application/json
+
+{
+  "status": "EXPIRED"
+}
