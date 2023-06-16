@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpCode, Put } from '@nestjs/common';
 import { UserService } from './user.service';
-import { EnableNonApprovedUser } from './enable-nonapproved-user.decorator';
+import { EnableNonApprovedUser } from './user-enable-nonapproved.decorator';
 import { UserDto, UserProtectedDto } from './user.response.dto';
-import { Transform } from '../utils/transform.interceptor';
-import { CurrentUser } from './current-user.decorator';
+import { Serialize } from '../utils/serialize.interceptor';
+import { CurrentUser } from './user-current.decorator';
 import { User } from './user.entity';
 import { FindUserDto, UpdateUserDto } from './user.request.dto';
 
@@ -12,26 +12,26 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @EnableNonApprovedUser()
-  @Transform(UserProtectedDto)
+  @Serialize(UserProtectedDto)
   @Get('self')
   getSelf(@CurrentUser() currentUser: User) {
     return this.userService.findById(currentUser.id);
   }
 
-  @Transform(UserProtectedDto)
+  @Serialize(UserProtectedDto)
   @Put('self')
   @HttpCode(204)
   update(@Body() body: UpdateUserDto, @CurrentUser() currentUser: User) {
     return this.userService.update(body, currentUser.id);
   }
 
-  @Transform(UserDto)
+  @Serialize(UserDto)
   @Get()
   getAllUsers() {
     return this.userService.findAllApprovedUsers();
   }
 
-  @Transform(UserDto)
+  @Serialize(UserDto)
   @Get('by-email')
   getUserById(@Body() body: FindUserDto) {
     return this.userService.findApprovedByEmail(body.email);

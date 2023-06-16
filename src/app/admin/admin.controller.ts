@@ -10,32 +10,32 @@ import {
 import { AdminGuard } from 'src/app/admin/admin.guard';
 import { AdminService } from './admin.service';
 import { UserAdminProtectedDto } from '../user/user.response.dto';
-import { Transform } from '../utils/transform.interceptor';
+import { Serialize } from '../utils/serialize.interceptor';
 
 @UseGuards(AdminGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Get('users')
   getAllUsers() {
     return this.adminService.getAllUsers();
   }
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Get()
   getAllAdmins() {
     return this.adminService.getAllUsersByAdminAndApproval(true);
   }
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Get(':id')
   getAdminById(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminService.getAdminById(id);
   }
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Get('users/isApproved/:isApproved')
   getAllUsersByApproval(
     @Param('isApproved', ParseBoolPipe) isApproved: boolean,
@@ -43,7 +43,7 @@ export class AdminController {
     return this.adminService.getAllUsersByAdminAndApproval(false, isApproved);
   }
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Post('user/:id/approve/:approve')
   approveNewUserCreation(
     @Param('id', ParseUUIDPipe) id: string,
@@ -52,7 +52,7 @@ export class AdminController {
     return this.adminService.approveNewUserCreation(id, approve);
   }
 
-  @Transform(UserAdminProtectedDto)
+  @Serialize(UserAdminProtectedDto)
   @Post('user/:id/makeAdmin/:makeAdmin')
   makeUserAdmin(
     @Param('id', ParseUUIDPipe) id: string,

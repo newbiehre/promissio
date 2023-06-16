@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { CurrentUserJwt } from 'src/app/auth/auth.service';
 import { IS_PUBLIC_KEY } from '../utils/public.decorator';
-import { ENABLE_NON_APPROVED_USER } from '../user/enable-nonapproved-user.decorator';
+import { ENABLE_NON_APPROVED_USER } from '../user/user-enable-nonapproved.decorator';
 import { ConfigService } from '@nestjs/config';
 
 interface MyHeaders extends Headers {
@@ -21,7 +21,6 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-    private readonly configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -16,9 +16,9 @@ import { PromiseDto } from 'src/app/promise/promise.response.dto';
 import { AdminGuard } from 'src/app/admin/admin.guard';
 import { PromiseService } from './promise.service';
 import { PromiseStatus } from 'src/app/promise/promise.entity';
-import { CurrentUser } from '../user/current-user.decorator';
+import { CurrentUser } from '../user/user-current.decorator';
 import { User } from '../user/user.entity';
-import { Transform } from '../utils/transform.interceptor';
+import { Serialize } from '../utils/serialize.interceptor';
 
 @Controller('promise')
 export class PromiseController {
@@ -30,13 +30,13 @@ export class PromiseController {
     return this.promiseService.getAllPromises();
   }
 
-  @Transform(PromiseDto)
+  @Serialize(PromiseDto)
   @Get()
   getMyPromises(@CurrentUser() currentUser: User) {
     return this.promiseService.getMyPromises(currentUser.id);
   }
 
-  @Transform(PromiseDto)
+  @Serialize(PromiseDto)
   @Get(':id')
   getMyPromiseById(
     @Param('id', ParseUUIDPipe) id: string,
@@ -45,13 +45,13 @@ export class PromiseController {
     return this.promiseService.getMyPromiseById(id, currentUser.id);
   } // fix later
 
-  @Transform(PromiseDto)
+  @Serialize(PromiseDto)
   @Post()
   create(@Body() body: CreatePromiseDto, @CurrentUser() currentUser: User) {
     return this.promiseService.create(body, currentUser);
   }
 
-  @Transform(PromiseDto)
+  @Serialize(PromiseDto)
   @Put(':id')
   updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
