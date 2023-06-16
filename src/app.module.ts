@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { PromiseLog } from './entities/promise-log.entity';
-import { Promise } from './entities/promise.entity';
-import { User } from './entities/user.entity';
-import { PromiseLogsModule } from './promise/promise-logs/promise-logs.module';
-import { PromiseModule } from './promise/promise.module';
-import { AdminModule } from './user/admin/admin.module';
-import { UserModule } from './user/user.module';
-import { ConfigModule } from '@nestjs/config';
+import { AdminModule } from './app/admin/admin.module';
+import { AuthModule } from './app/auth/auth.module';
+import { PromiseLog } from './app/promise-logs/promise-log.entity';
+import { PromiseLogsModule } from './app/promise-logs/promise-logs.module';
+import { Promise } from './app/promise/promise.entity';
+import { PromiseModule } from './app/promise/promise.module';
+import { User } from './app/user/user.entity';
+import { UserModule } from './app/user/user.module';
 
 @Module({
   imports: [
