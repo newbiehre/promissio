@@ -13,13 +13,13 @@ export class UserController {
 
   @EnableNonApprovedUser()
   @Serialize(UserProtectedDto)
-  @Get('self')
+  @Get('account')
   getSelf(@CurrentUser() currentUser: User) {
     return this.userService.findById(currentUser.id);
   }
 
   @Serialize(UserProtectedDto)
-  @Put('self')
+  @Put('account')
   @HttpCode(204)
   update(@Body() body: UpdateUserDto, @CurrentUser() currentUser: User) {
     return this.userService.update(body, currentUser.id);

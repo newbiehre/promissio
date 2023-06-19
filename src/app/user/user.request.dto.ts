@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { RequiredIfNotNull } from '../utils/required-if-not-null.decorator';
 
 export class SigninDto {
   @IsEmail()
@@ -50,6 +51,10 @@ export class UpdateUserDto {
   email?: string;
 
   @IsString()
-  @IsOptional()
-  password?: string;
+  @RequiredIfNotNull('newPassword')
+  oldPassword?: string;
+
+  @IsString()
+  @RequiredIfNotNull('oldPassword')
+  newPassword?: string;
 }
