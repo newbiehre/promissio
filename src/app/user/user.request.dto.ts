@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { RequiredIfNotNull } from '../utils/required-if-not-null.decorator';
 
 export class SigninDto {
@@ -30,6 +36,12 @@ export class SignupDto {
 
   // @Match('password', { message: 'Confirmed password does not match.' })
   // confirmPassword: string;
+}
+
+export class CreateUserDto extends SignupDto {
+  @IsBoolean()
+  @IsNotEmpty()
+  makeAdmin: boolean;
 }
 
 export class FindUserDto {

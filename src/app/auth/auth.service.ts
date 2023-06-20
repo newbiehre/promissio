@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   async signin({ email, password }: SigninDto) {
-    const existingUser = await this.userService.findByEmail(email);
+    const existingUser = await this.userService.findExistingByEmail(email);
     this.userService.validatePassword(password, existingUser);
     return this.generateJwtToken(existingUser);
   }

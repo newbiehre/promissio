@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
 import { randomUUID } from 'crypto';
-import { FindUserDto, UpdateUserDto } from './user.request.dto';
+import { UserController } from './user.controller';
 import { User } from './user.entity';
+import { FindUserDto, UpdateUserDto } from './user.request.dto';
+import { UserService } from './user.service';
 
 describe('UserController', () => {
   let controller: UserController;
-  let spyService: UserService;
+  let userService: UserService;
 
   const user: User = {
     id: randomUUID(),
@@ -19,7 +19,7 @@ describe('UserController', () => {
     isAdmin: true,
     myPromises: [],
     othersPromises: [],
-    logs: [],
+    promiseLogs: [],
   };
 
   beforeEach(async () => {
@@ -28,18 +28,18 @@ describe('UserController', () => {
       providers: [
         {
           provide: UserService,
-          useFactory: () => ({
+          useValue: {
             findById: jest.fn(() => {}),
             update: jest.fn(() => {}),
             findAllApprovedUsers: jest.fn(() => []),
             findApprovedByEmail: jest.fn(() => {}),
-          }),
+          },
         },
       ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
-    spyService = module.get<UserService>(UserService);
+    userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
@@ -49,7 +49,7 @@ describe('UserController', () => {
   describe('getSelf', () => {
     it('called the service with expected params', () => {
       controller.getSelf(user);
-      expect(spyService.findById).toHaveBeenCalledWith(user.id);
+      expect(userService.findExistingById).toHaveBeenCalledWith(user.id);
     });
   });
 
@@ -57,14 +57,14 @@ describe('UserController', () => {
     it('called the service with expected params', () => {
       const dto = new UpdateUserDto();
       controller.update(dto, user);
-      expect(spyService.update).toHaveBeenCalledWith(dto, user.id);
+      expect(userService.update).toHaveBeenCalledWith(dto, user.id);
     });
   });
 
   describe('get all approved users', () => {
     it('called the service with expected params', () => {
       controller.getAllUsers();
-      expect(spyService.findAllApprovedUsers).toHaveBeenCalled();
+      expect(userService.findAllApproved).toHaveBeenCalled();
     });
   });
 
@@ -72,7 +72,7 @@ describe('UserController', () => {
     it('called the service with expected params', () => {
       const dto = new FindUserDto();
       controller.getUserById(dto);
-      expect(spyService.findApprovedByEmail).toHaveBeenCalledWith(dto.email);
+      expect(userService.findApprovedByEmail).toHaveBeenCalledWith(dto.email);
     });
   });
 });

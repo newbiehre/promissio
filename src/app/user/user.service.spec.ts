@@ -6,25 +6,19 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
+import { User1 } from '../../test-utils/utils';
 import { User } from './user.entity';
-import { SignupDto, UpdateUserDto } from './user.request.dto';
+import { CreateUserDto, SignupDto, UpdateUserDto } from './user.request.dto';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
-
-  let existingUser = new User();
-  existingUser.id = randomUUID();
-  existingUser.firstName = 'Existing User';
-  existingUser.lastName = 'Existing User';
-  existingUser.email = 'existing_user@gmail.com';
-  existingUser.password = 'wrongfully-unhashed-pw';
-  existingUser.isApproved = true;
+  let existingUser = User1;
 
   const MockUserRepositoryProvider = {
     provide: getRepositoryToken(User),
     useValue: {
-      find: jest.fn(() => Promise.resolve([existingUser])),
+      findBy: jest.fn((isApproved: boolean) => Promise.resolve([existingUser])),
       findOneBy: jest.fn(({ id, email }: { id?: string; email?: string }) => {
         let user = null;
         if (
@@ -36,9 +30,7 @@ describe('UserService', () => {
         return user;
       }),
       create: jest.fn((dto: SignupDto) => dto),
-      save: jest.fn((user: User) =>
-        Promise.resolve({ id: randomUUID(), ...user }),
-      ),
+      save: jest.fn((user: User) => Promise.resolve(user)),
     },
   };
 
@@ -54,22 +46,17 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  it('userRepository should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
   describe('findById', () => {
     it('show return an existing user when id exists', async () => {
-      const user = await service.findById(existingUser.id);
+      const user = await service.findExistingById(existingUser.id);
 
-      expect(user).toBeDefined();
       expect(user.id).toBe(existingUser.id);
       expect(user.email).toBe(existingUser.email);
     });
 
     it('show throw NotFoundException when user with id does not exist', async () => {
       const randomId = randomUUID();
-      const userPromise = service.findById(randomId);
+      const userPromise = service.findExistingById(randomId);
 
       expect(userPromise).rejects.toThrowError(NotFoundException);
       expect(userPromise).rejects.toMatchObject({
@@ -80,16 +67,15 @@ describe('UserService', () => {
 
   describe('findByEmail', () => {
     it('show return an existing user when email exists', async () => {
-      const user = await service.findByEmail(existingUser.email);
+      const user = await service.findExistingByEmail(existingUser.email);
 
-      expect(user).toBeDefined();
       expect(user.id).toBe(existingUser.id);
       expect(user.email).toBe(existingUser.email);
     });
 
     it('show throw NotFoundException when user with email does not exist', async () => {
       const randomEmail = 'randomEmail@email.com';
-      const userPromise = service.findByEmail(randomEmail);
+      const userPromise = service.findExistingByEmail(randomEmail);
 
       expect(userPromise).rejects.toThrowError(NotFoundException);
       expect(userPromise).rejects.toMatchObject({
@@ -98,40 +84,35 @@ describe('UserService', () => {
     });
   });
 
-  describe('create', () => {
+  describe('createUser', () => {
     it('should create new user with hashed password', async () => {
-      const email = 'newUser@gmail.com';
-      const password = '12345';
-
-      const createdUser = await service.create({
+      const email = 'new@gmail.com';
+      const unhashedPassword = '12345';
+      const createdUser = await service.createUser({
         ...new SignupDto(),
         email,
-        password,
+        password: unhashedPassword,
       });
 
-      expect(createdUser).toBeDefined();
-      // Check that the id property matches the UUID pattern
-      expect(createdUser.id).toMatch(
-        /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}/,
-      );
       expect(createdUser.email).toBe(email);
+      expect(createdUser.isAdmin).not.toBeDefined();
       expect(createdUser.password).toBeDefined();
       // Check that the hashed password is not the same as the input password
-      expect(createdUser.password).not.toBe(password);
+      expect(createdUser.password).not.toBe(unhashedPassword);
       expect(
-        service.validatePassword(password, createdUser),
+        service.validatePassword(unhashedPassword, createdUser),
       ).resolves.not.toThrowError();
     });
 
     it('show throw ConflictException when creating user with an existing email', async () => {
       const createdUserPromise = service.create({
-        ...new SignupDto(),
+        ...new CreateUserDto(),
         email: existingUser.email,
       });
 
       expect(createdUserPromise).rejects.toThrowError(ConflictException);
       expect(createdUserPromise).rejects.toMatchObject({
-        message: `Email already exists: ${existingUser.email}`,
+        message: `Duplicate email: ${existingUser.email}`,
       });
     });
 
@@ -144,11 +125,11 @@ describe('UserService', () => {
       });
 
       it('show return empty array if no approved users found', async () => {
-        MockUserRepositoryProvider.useValue.find.mockImplementation(
+        MockUserRepositoryProvider.useValue.findBy.mockImplementation(
           jest.fn(() => Promise.resolve([])),
         );
 
-        const approvedUsers = await service.findAllApprovedUsers();
+        const approvedUsers = await service.findAllApproved();
         expect(approvedUsers).toEqual([]);
       });
     });
@@ -180,7 +161,6 @@ describe('UserService', () => {
         };
         const user = await service.update(updateDto, existingUser.id);
 
-        expect(user).toBeDefined();
         expect(user.id).toBe(existingUser.id);
         expect(user.firstName).toBe(existingUser.firstName);
         expect(user.email).toBe(newEmail);
@@ -201,7 +181,7 @@ describe('UserService', () => {
         existingUser.password = await service.hashPassword(
           existingUserPassword,
         );
-        expect(existingUser.password).toBeDefined();
+        expect(existingUser.password).not.toBe(existingUserPassword);
 
         const newPassword = 'new1234';
         const updateDto = {
@@ -210,7 +190,6 @@ describe('UserService', () => {
         };
         const updatedUser = await service.update(updateDto, existingUser.id);
 
-        expect(updatedUser).toBeDefined();
         expect(updatedUser.id).toBe(existingUser.id);
         expect(updatedUser.firstName).toBe(existingUser.firstName);
         expect(updatedUser.password).toBeDefined();

@@ -22,7 +22,7 @@ export class PromiseLog {
   @Column()
   status: PromiseStatus;
 
-  @ManyToOne(() => User, (user) => user.logs, {
+  @ManyToOne(() => User, (user) => user.promiseLogs, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn()

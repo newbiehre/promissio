@@ -15,7 +15,7 @@ export class UserController {
   @Serialize(UserProtectedDto)
   @Get('account')
   getSelf(@CurrentUser() currentUser: User) {
-    return this.userService.findById(currentUser.id);
+    return this.userService.findExistingById(currentUser.id);
   }
 
   @Serialize(UserProtectedDto)
@@ -28,7 +28,7 @@ export class UserController {
   @Serialize(UserDto)
   @Get()
   getAllUsers() {
-    return this.userService.findAllApprovedUsers();
+    return this.userService.findAllApproved();
   }
 
   @Serialize(UserDto)

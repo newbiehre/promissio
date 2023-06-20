@@ -2,61 +2,47 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
+import { CreateUserDto } from '../user/user.request.dto';
+import { BaseUserService } from '../utils/base-user.service';
 
 @Injectable()
-export class AdminService {
+export class AdminService extends BaseUserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
-
-  getAllUsers(): Promise<User[]> {
-    return this.userRepository.find();
+    @InjectRepository(User) readonly userRepository: Repository<User>,
+  ) {
+    super(userRepository);
   }
 
-  getAllUsersByAdminAndApproval(
-    isAdmin: boolean,
-    isApproved?: boolean,
-  ): Promise<User[]> {
-    return this.userRepository.find({
-      where: {
-        isApproved,
-        isAdmin,
-      },
+  createAdmin(body: CreateUserDto): Promise<User> {
+    return this.create(body);
+  }
+
+  getAll(isAdmin?: boolean, isApproved?: boolean): Promise<User[]> {
+    return this.userRepository.findBy({
+      isAdmin,
+      isApproved,
     });
   }
 
-  async getAdminById(id: string): Promise<User | null> {
-    const result = await this.userRepository.findOneBy({
-      isAdmin: true,
+  async getAdminById(id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({
       id,
+      isAdmin: true,
     });
-    if (!result) throw new NotFoundException('No admins with user id: ' + id);
-    return result;
+    if (!user) throw new NotFoundException('No admin with id: ' + id);
+    return user;
   }
 
-  async approveNewUserCreation(id: string, approve: boolean): Promise<User> {
-    const user: User = await this.userRepository.findOneBy({ id });
-
-    if (!user) throw new NotFoundException('Cannot find user: ' + id);
+  async approveUserCreation(id: string, approve: boolean): Promise<User> {
+    const user: User = await this.findExistingById(id);
     if (user.isApproved === approve) return user;
-
     user.isApproved = approve;
     return this.userRepository.save(user);
   }
 
-  async makeUserAdmin(id: string, makeAdmin: boolean): Promise<User> {
-    const user: User = await this.userRepository.findOneBy({
-      isApproved: true,
-      id,
-    });
-
-    if (!user)
-      throw new NotFoundException(
-        'Cannot find user or new user has not been approved: ' + id,
-      );
-
+  async makeAdmin(id: string, makeAdmin: boolean): Promise<User> {
+    const user: User = await this.findExistingById(id);
     if (user.isAdmin === makeAdmin) return user;
-
     user.isAdmin = makeAdmin;
     return this.userRepository.save(user);
   }

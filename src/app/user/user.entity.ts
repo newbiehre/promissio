@@ -26,7 +26,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isApproved: boolean;
 
   @Column({ default: false })
@@ -45,5 +45,5 @@ export class User {
   othersPromises: Promise[];
 
   @OneToMany(() => PromiseLog, (log) => log.executedBy)
-  logs: PromiseLog[];
+  promiseLogs: PromiseLog[];
 }

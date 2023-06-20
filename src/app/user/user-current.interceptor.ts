@@ -18,8 +18,13 @@ export class UserInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const currentUserId: string | null = request.currentUserJwt?.sub;
-    const currentUser: User | null =
-      currentUserId && (await this.userService.findById(currentUserId));
+    let user = null;
+    try {
+      user = await this.userService.findExistingById(currentUserId);
+    } catch (e) {
+      console.error(e);
+    }
+    const currentUser: User | null = currentUserId && user;
     request.currentUser = currentUser;
     return next.handle();
   }

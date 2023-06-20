@@ -20,13 +20,13 @@ export class AdminController {
   @Serialize(UserAdminProtectedDto)
   @Get('users')
   getAllUsers() {
-    return this.adminService.getAllUsers();
+    return this.adminService.getAll();
   }
 
   @Serialize(UserAdminProtectedDto)
   @Get()
   getAllAdmins() {
-    return this.adminService.getAllUsersByAdminAndApproval(true);
+    return this.adminService.getAll(true);
   }
 
   @Serialize(UserAdminProtectedDto)
@@ -40,7 +40,7 @@ export class AdminController {
   getAllUsersByApproval(
     @Param('isApproved', ParseBoolPipe) isApproved: boolean,
   ) {
-    return this.adminService.getAllUsersByAdminAndApproval(false, isApproved);
+    return this.adminService.getAll(false, isApproved);
   }
 
   @Serialize(UserAdminProtectedDto)
@@ -49,7 +49,7 @@ export class AdminController {
     @Param('id', ParseUUIDPipe) id: string,
     @Param('approve', ParseBoolPipe) approve: boolean,
   ) {
-    return this.adminService.approveNewUserCreation(id, approve);
+    return this.adminService.approveUserCreation(id, approve);
   }
 
   @Serialize(UserAdminProtectedDto)
@@ -58,6 +58,6 @@ export class AdminController {
     @Param('id', ParseUUIDPipe) id: string,
     @Param('makeAdmin', ParseBoolPipe) makeAdmin: boolean,
   ) {
-    return this.adminService.makeUserAdmin(id, makeAdmin);
+    return this.adminService.makeAdmin(id, makeAdmin);
   }
 }

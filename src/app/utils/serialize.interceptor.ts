@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // any class
-interface ClassConstrcutor {
+interface ClassConstructor {
   new (...args: any[]): {};
 }
 
-export function Serialize(dto: ClassConstrcutor) {
+export function Serialize(dto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
 }
 
