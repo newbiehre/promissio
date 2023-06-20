@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './app/admin/admin.module';
@@ -10,6 +10,7 @@ import { User } from './app/user/user.entity';
 import { Promise } from './app/promise/promise.entity';
 import { PromiseLog } from './app/promise-logs/promise-log.entity';
 import configuration from './config/configuration';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -37,6 +38,19 @@ import configuration from './config/configuration';
       }),
       inject: [ConfigService],
     }),
+  ],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        forbidUnknownValues: true,
+        whitelist: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    },
   ],
 })
 export class AppModule {}
