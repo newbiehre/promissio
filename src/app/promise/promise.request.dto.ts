@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { PromiseStatus } from 'src/app/promise/promise.entity';
 
 export class CreatePromiseDto {
@@ -25,4 +31,30 @@ export class UpdatePromiseDto {
   @IsEnum(PromiseStatus)
   @Transform((params) => PromiseStatus[params.value])
   status: PromiseStatus;
+}
+
+export class FilterPromiseDto {
+  @IsString()
+  @IsOptional()
+  id?: string;
+
+  @IsString()
+  @IsOptional()
+  toUserId?: string;
+
+  @IsString()
+  @IsOptional()
+  fromUserId?: string;
+
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @IsString()
+  @IsOptional()
+  ocassion?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 }

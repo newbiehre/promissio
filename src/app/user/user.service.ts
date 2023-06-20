@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseUserService } from '../utils/base-user.service';
@@ -7,6 +7,8 @@ import { SignupDto, UpdateUserDto } from './user.request.dto';
 
 @Injectable()
 export class UserService extends BaseUserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User) readonly userRepository: Repository<User>,
   ) {
@@ -14,6 +16,7 @@ export class UserService extends BaseUserService {
   }
 
   createUser(body: SignupDto): Promise<User> {
+    this.logger.log('Creating user with', body);
     return this.create(body);
   }
 
@@ -37,20 +40,21 @@ export class UserService extends BaseUserService {
     currentUserId: string,
   ) {
     const existingUser = await this.findExistingById(currentUserId);
+    this.logger.log('Updating  user with', body);
+
+    const existingUserToUpdate = {
+      ...existingUser,
+      ...body,
+    };
+
     if (oldPassword && newPassword) {
       await this.validatePassword(oldPassword, existingUser);
       const hashedPassword = await this.hashPassword(newPassword);
-      const existingUserToUpdate = {
-        ...existingUser,
-        ...body,
+      return this.userRepository.save({
+        ...existingUserToUpdate,
         password: hashedPassword,
-      };
-      return this.userRepository.save(existingUserToUpdate);
+      });
     } else {
-      const existingUserToUpdate = {
-        ...existingUser,
-        ...body,
-      };
       return this.userRepository.save(existingUserToUpdate);
     }
   }

@@ -6,6 +6,16 @@ import {
   IsString,
 } from 'class-validator';
 import { RequiredIfNotNull } from '../utils/required-if-not-null.decorator';
+import { User } from './user.entity';
+
+export class UserLoggingDto {
+  password: string;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+    delete this.password;
+  }
+}
 
 export class SigninDto {
   @IsEmail()
@@ -33,9 +43,6 @@ export class SignupDto {
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  // @Match('password', { message: 'Confirmed password does not match.' })
-  // confirmPassword: string;
 }
 
 export class CreateUserDto extends SignupDto {

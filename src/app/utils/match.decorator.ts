@@ -26,3 +26,7 @@ export class MatchConstraint implements ValidatorConstraintInterface {
     return value === relatedValue;
   }
 }
+
+// To use
+// @Match('fiendToMatch', { message: 'fiendToMatch does not match.' })
+// field: string;

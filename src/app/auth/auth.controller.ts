@@ -1,20 +1,27 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SigninDto, CreateUserDto } from '../user/user.request.dto';
+import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { SigninDto, SignupDto, UserLoggingDto } from '../user/user.request.dto';
 import { Public } from '../utils/public.decorator';
+import { AuthService } from './auth.service';
 
 @Public()
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() body: CreateUserDto) {
-    return this.authService.signup(body);
+  signup(@Body() userDto: SignupDto) {
+    this.logger.verbose(
+      `User signing up. Data: ${JSON.stringify(new UserLoggingDto(userDto))}`,
+    );
+    return this.authService.signup(userDto);
   }
 
   @Post('signin')
-  signin(@Body() body: SigninDto) {
-    return this.authService.signin(body);
+  signin(@Body() userDto: SigninDto) {
+    this.logger.verbose(
+      `User signing in. Data: ${JSON.stringify(new UserLoggingDto(userDto))}`,
+    );
+    return this.authService.signin(userDto);
   }
 }

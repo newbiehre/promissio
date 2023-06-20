@@ -3,14 +3,14 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { CurrentUserJwt } from 'src/app/auth/auth.service';
-import { IS_PUBLIC_KEY } from '../utils/public.decorator';
 import { ENABLE_NON_APPROVED_USER } from '../user/user-enable-nonapproved.decorator';
-import { ConfigService } from '@nestjs/config';
+import { IS_PUBLIC_KEY } from '../utils/public.decorator';
 
 interface MyHeaders extends Headers {
   authorization?: string;
@@ -18,6 +18,8 @@ interface MyHeaders extends Headers {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly logger = new Logger(AuthGuard.name);
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
@@ -39,14 +41,19 @@ export class AuthGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
-    if (enableNonApprovedUser) return true;
+    if (enableNonApprovedUser) {
+      return true;
+    }
 
     // Check Auth
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     let isApprovedUser = false;
 
-    if (!token) throw new UnauthorizedException('Missing token.');
+    if (!token) {
+      this.logger.error('Unauthorized: missing token');
+      throw new UnauthorizedException('Missing token.');
+    }
     try {
       const payload = (await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET_KEY,
@@ -55,13 +62,16 @@ export class AuthGuard implements CanActivate {
       request['currentUserJwt'] = payload;
       isApprovedUser = payload.isApproved;
     } catch (error) {
-      console.error(error);
+      this.logger.error('Unauthorized: issue with token', error.stack);
       throw new UnauthorizedException('Issue with token');
     }
 
-    if (!isApprovedUser)
+    if (!isApprovedUser) {
+      this.logger.error('Forbidden: non-approved user');
       throw new ForbiddenException('User has not been approved yet.');
+    }
 
+    this.logger.log(`Permitting user: ${isApprovedUser}`);
     return isApprovedUser;
   }
 

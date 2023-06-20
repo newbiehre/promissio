@@ -17,11 +17,11 @@ Content-Type: application/json
 }
 
 ### get self
-GET http://localhost:3000/user/self
+GET http://localhost:3000/user/account
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
 
 ### update self
-PUT http://localhost:3000/user/self
+PUT http://localhost:3000/user/account/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZWVkOTAxYS1mODVmLTRmZDEtYTA4NS00NzgzMzdlMjAwMzEiLCJpc0FkbWluIjp0cnVlLCJpc0FwcHJvdmVkIjp0cnVlLCJpYXQiOjE2ODY4OTUxNTEsImV4cCI6MTY4Njk2NTIxMX0.a3foOnVHYdhPX16Mlhr4A6SJ0xJO5Jcv1OlDNTOdNic
 Content-Type: application/json
 

@@ -6,11 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Promise, PromiseStatus } from 'src/app/promise/promise.entity';
+import {
+  CreatePromiseDto,
+  FilterPromiseDto,
+} from 'src/app/promise/promise.request.dto';
 import { Repository } from 'typeorm';
 import { PromiseLogsService } from '../promise-logs/promise-logs.service';
-import { CreatePromiseDto } from 'src/app/promise/promise.request.dto';
-import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class PromiseService {
@@ -21,26 +24,35 @@ export class PromiseService {
     private readonly promiseLogService: PromiseLogsService,
   ) {}
 
-  getAllPromises() {
-    return this.promiseRepository.find();
-  }
-
-  getMyPromises(currentUserId: string) {
+  private queryMyPromises(currentUserId: string) {
     return this.promiseRepository
       .createQueryBuilder('promise')
       .leftJoinAndSelect('promise.to', 'to')
       .leftJoinAndSelect('promise.from', 'from')
-      .where('to.id = :id OR from.id = :id', { id: currentUserId })
-      .getMany();
+      .where('to.id = :id OR from.id = :id', { id: currentUserId });
+  }
+
+  getMyPromises(filterDto: FilterPromiseDto, currentUserId: string) {
+    const { id, toUserId, fromUserId, title, ocassion, status } = filterDto;
+    const query = this.queryMyPromises(currentUserId);
+
+    id && query.andWhere('promise.id = :id', { id });
+    toUserId && query.andWhere('to.id = :id', { id: toUserId });
+    fromUserId && query.andWhere('from.id = :id', { id: fromUserId });
+    title &&
+      query.andWhere('promise.title like :title', { title: `%${title}%` });
+    ocassion &&
+      query.andWhere('promise.ocassion like :ocassion', {
+        ocassion: `%${ocassion}%`,
+      });
+    status && query.andWhere('promise.status = :status', { status });
+
+    return query.getMany();
   }
 
   async getMyPromiseById(id: string, currentUserId: string) {
-    const promise: Promise | null = await this.promiseRepository
-      .createQueryBuilder('promise')
-      .leftJoinAndSelect('promise.to', 'to')
-      .leftJoinAndSelect('promise.from', 'from')
-      .where('promise.id = :id', { id })
-      .andWhere('to.id = :id OR from.id = :id', { id: currentUserId })
+    const promise: Promise | null = await this.queryMyPromises(currentUserId)
+      .andWhere('promise.id = :id', { id })
       .getOne();
 
     if (!promise)
@@ -58,14 +70,14 @@ export class PromiseService {
       to: friend,
       from: currentUser,
     });
-    const savedNewPromise = await this.promiseRepository.save(newPromise);
+    const savedPromise = await this.promiseRepository.save(newPromise);
     await this.promiseLogService.createAndSaveLog({
-      promise: savedNewPromise,
-      status: savedNewPromise.status,
+      promise: savedPromise,
+      status: savedPromise.status,
       executedBy: currentUser,
-      createdAt: savedNewPromise.createdAt,
+      createdAt: savedPromise.createdAt,
     });
-    return savedNewPromise;
+    return savedPromise;
   }
 
   async updateStatus(

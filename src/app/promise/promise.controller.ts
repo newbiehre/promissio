@@ -6,34 +6,30 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   CreatePromiseDto,
+  FilterPromiseDto,
   UpdatePromiseDto,
 } from 'src/app/promise/promise.request.dto';
 import { PromiseDto } from 'src/app/promise/promise.response.dto';
-import { AdminGuard } from 'src/app/admin/admin.guard';
-import { PromiseService } from './promise.service';
-import { PromiseStatus } from 'src/app/promise/promise.entity';
 import { CurrentUser } from '../user/user-current.decorator';
 import { User } from '../user/user.entity';
 import { Serialize } from '../utils/serialize.interceptor';
+import { PromiseService } from './promise.service';
 
 @Controller('promise')
 export class PromiseController {
   constructor(private readonly promiseService: PromiseService) {}
 
-  @UseGuards(AdminGuard)
-  @Get('admin')
-  getAllPromises() {
-    return this.promiseService.getAllPromises();
-  }
-
   @Serialize(PromiseDto)
   @Get()
-  getMyPromises(@CurrentUser() currentUser: User) {
-    return this.promiseService.getMyPromises(currentUser.id);
+  getMyPromises(
+    @Query() filterDto: FilterPromiseDto,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.promiseService.getMyPromises(filterDto, currentUser.id);
   }
 
   @Serialize(PromiseDto)
@@ -43,7 +39,7 @@ export class PromiseController {
     @CurrentUser() currentUser: User,
   ) {
     return this.promiseService.getMyPromiseById(id, currentUser.id);
-  } // fix later
+  }
 
   @Serialize(PromiseDto)
   @Post()

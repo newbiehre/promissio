@@ -29,9 +29,9 @@ describe('UserController', () => {
         {
           provide: UserService,
           useValue: {
-            findById: jest.fn(() => {}),
+            findExistingById: jest.fn(() => {}),
             update: jest.fn(() => {}),
-            findAllApprovedUsers: jest.fn(() => []),
+            findAllApproved: jest.fn(() => []),
             findApprovedByEmail: jest.fn(() => {}),
           },
         },
