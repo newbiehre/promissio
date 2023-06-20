@@ -1,16 +1,24 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './app/admin/admin.module';
 import { AuthModule } from './app/auth/auth.module';
-import { PromiseLogsModule } from './app/promise-logs/promise-logs.module';
-import { PromiseModule } from './app/promise/promise.module';
-import { UserModule } from './app/user/user.module';
-import { User } from './app/user/user.entity';
-import { Promise } from './app/promise/promise.entity';
 import { PromiseLog } from './app/promise-logs/promise-log.entity';
+import { PromiseLogsModule } from './app/promise-logs/promise-logs.module';
+import { Promise } from './app/promise/promise.entity';
+import { PromiseModule } from './app/promise/promise.module';
+import { User } from './app/user/user.entity';
+import { UserModule } from './app/user/user.module';
+import { HttpExceptionFilter } from './app/utils/http-exception.filters';
+import { HttpLoggingMiddleware } from './app/utils/logging-middleware';
+import { TypeOrmExceptionFilter } from './app/utils/typeorm-exception.filters';
 import configuration from './config/configuration';
-import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -51,6 +59,18 @@ import { APP_PIPE } from '@nestjs/core';
         },
       }),
     },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeOrmExceptionFilter,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HttpLoggingMiddleware).forRoutes('*');
+  }
+}

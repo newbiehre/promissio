@@ -2,14 +2,17 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
+  Logger,
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { UserService } from './user.service';
 import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @Injectable()
-export class UserInterceptor implements NestInterceptor {
+export class CurrentUserInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(CurrentUserInterceptor.name);
+
   constructor(private readonly userService: UserService) {}
 
   async intercept(
@@ -18,14 +21,23 @@ export class UserInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const currentUserId: string | null = request.currentUserJwt?.sub;
-    let user = null;
+
+    if (!currentUserId) {
+      this.logger.warn(`No JWT token in request.`);
+    }
+
+    let user: User | null = null;
     try {
       user = await this.userService.findExistingById(currentUserId);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      this.logger.error(
+        `Cannot find existing user with userId: ${user.id}`,
+        error.stack,
+      );
+      console.error(error);
     }
-    const currentUser: User | null = currentUserId && user;
-    request.currentUser = currentUser;
+
+    request.currentUser = user;
     return next.handle();
   }
 }
