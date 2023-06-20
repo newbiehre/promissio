@@ -29,17 +29,19 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-
     if (isPublic) {
       return true;
     }
 
-    // Check Auth
+    // Enable non-approved users to bypass auth check if they have this decorator
     const enableNonApprovedUser = this.reflector.getAllAndOverride<boolean>(
       ENABLE_NON_APPROVED_USER,
       [context.getHandler(), context.getClass()],
     );
 
+    if (enableNonApprovedUser) return true;
+
+    // Check Auth
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     let isApprovedUser = false;
@@ -57,7 +59,6 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Issue with token');
     }
 
-    if (enableNonApprovedUser) return true;
     if (!isApprovedUser)
       throw new ForbiddenException('User has not been approved yet.');
 
