@@ -12,10 +12,10 @@ import {
   CreatePromiseDto,
   FilterPromiseDto,
   UpdatePromiseDto,
-} from 'src/app/promise/promise.request.dto';
-import { PromiseDto } from 'src/app/promise/promise.response.dto';
-import { CurrentUser } from '../user/user-current.decorator';
-import { User } from '../user/user.entity';
+} from 'src/app/promises/promise.request.dto';
+import { PromiseDto } from 'src/app/promises/promise.response.dto';
+import { CurrentUser } from '../users/user-current.decorator';
+import { User } from '../users/user.entity';
 import { Serialize } from '../utils/serialize.interceptor';
 import { PromiseService } from './promise.service';
 

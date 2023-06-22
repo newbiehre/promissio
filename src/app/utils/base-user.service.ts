@@ -1,15 +1,14 @@
 import {
   BadRequestException,
   ConflictException,
-  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { scrypt as _scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
-import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { scrypt as _scrypt, randomBytes } from 'crypto';
 import { Repository } from 'typeorm';
+import { promisify } from 'util';
+import { User } from '../users/user.entity';
 
 const scrypt = promisify(_scrypt);
 

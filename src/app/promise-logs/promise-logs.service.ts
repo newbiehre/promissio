@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PromiseLog } from './promise-log.entity';
-import { User } from '../user/user.entity';
+import { User } from '../users/user.entity';
 import { CreatePromiseLogDto } from './promise-log.request.dto';
 
 @Injectable()

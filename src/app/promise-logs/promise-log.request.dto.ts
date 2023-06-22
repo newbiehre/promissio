@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { Promise, PromiseStatus } from 'src/app/promise/promise.entity';
-import { User } from '../user/user.entity';
+import { Promise, PromiseStatus } from 'src/app/promises/promise.entity';
+import { User } from '../users/user.entity';
 
 export class CreatePromiseLogDto {
   @IsNotEmpty()

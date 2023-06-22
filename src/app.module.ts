@@ -7,18 +7,18 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminModule } from './app/admin/admin.module';
+import { AdminModule } from './app/admins/admin.module';
 import { AuthModule } from './app/auth/auth.module';
 import { PromiseLog } from './app/promise-logs/promise-log.entity';
 import { PromiseLogsModule } from './app/promise-logs/promise-logs.module';
-import { Promise } from './app/promise/promise.entity';
-import { PromiseModule } from './app/promise/promise.module';
-import { User } from './app/user/user.entity';
-import { UserModule } from './app/user/user.module';
+import { Promise } from './app/promises/promise.entity';
+import { PromiseModule } from './app/promises/promise.module';
+import { User } from './app/users/user.entity';
+import { UserModule } from './app/users/user.module';
 import { HttpExceptionFilter } from './app/utils/http-exception.filters';
 import { HttpLoggingMiddleware } from './app/utils/logging-middleware';
 import { TypeOrmExceptionFilter } from './app/utils/typeorm-exception.filters';
-import configuration from './config/configuration';
+import configuration from './configs/configuration';
 
 @Module({
   imports: [

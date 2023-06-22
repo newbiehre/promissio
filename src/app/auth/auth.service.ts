@@ -1,8 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../user/user.entity';
-import { SigninDto, SignupDto } from '../user/user.request.dto';
-import { UserService } from '../user/user.service';
+import { User } from '../users/user.entity';
+import { SigninDto, SignupDto } from '../users/user.request.dto';
+import { UserService } from '../users/user.service';
+
+export interface AuthResponse {
+  access_token: string;
+}
 
 export interface CurrentUserJwt {
   sub: string;

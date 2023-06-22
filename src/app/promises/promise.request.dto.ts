@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PromiseStatus } from 'src/app/promise/promise.entity';
+import { PromiseStatus } from 'src/app/promises/promise.entity';
 
 export class CreatePromiseDto {
   @IsEmail()

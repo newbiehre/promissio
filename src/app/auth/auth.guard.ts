@@ -9,7 +9,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { CurrentUserJwt } from 'src/app/auth/auth.service';
-import { ENABLE_NON_APPROVED_USER } from '../user/user-enable-nonapproved.decorator';
+import { ENABLE_NON_APPROVED_USER } from '../users/user-enable-nonapproved.decorator';
 import { IS_PUBLIC_KEY } from '../utils/public.decorator';
 
 interface MyHeaders extends Headers {
@@ -68,7 +68,7 @@ export class AuthGuard implements CanActivate {
 
     if (!isApprovedUser) {
       this.logger.error('Forbidden: non-approved user');
-      throw new ForbiddenException('User has not been approved yet.');
+      throw new ForbiddenException('User has not been approved.');
     }
 
     this.logger.log(`Permitting user: ${isApprovedUser}`);

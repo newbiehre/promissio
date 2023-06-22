@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PromiseLog } from '../promise-logs/promise-log.entity';
-import { User } from '../user/user.entity';
+import { User } from '../users/user.entity';
 
 export enum PromiseStatus {
   ISSUED = 'ISSUED',

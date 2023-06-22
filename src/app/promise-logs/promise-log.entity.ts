@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Promise, PromiseStatus } from '../promise/promise.entity';
-import { User } from '../user/user.entity';
+import { Promise, PromiseStatus } from '../promises/promise.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class PromiseLog {

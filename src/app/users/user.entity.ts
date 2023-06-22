@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PromiseLog } from '../promise-logs/promise-log.entity';
-import { Promise } from '../promise/promise.entity';
+import { Promise } from '../promises/promise.entity';
 
 @Entity()
 export class User {

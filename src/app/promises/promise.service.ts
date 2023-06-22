@@ -5,15 +5,15 @@ import {
   NotImplementedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Promise, PromiseStatus } from 'src/app/promise/promise.entity';
+import { Promise, PromiseStatus } from 'src/app/promises/promise.entity';
 import {
   CreatePromiseDto,
   FilterPromiseDto,
-} from 'src/app/promise/promise.request.dto';
+} from 'src/app/promises/promise.request.dto';
 import { Repository } from 'typeorm';
 import { PromiseLogsService } from '../promise-logs/promise-logs.service';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 
 @Injectable()
 export class PromiseService {

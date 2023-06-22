@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { AdminGuard } from 'src/app/admin/admin.guard';
+import { AdminGuard } from 'src/app/admins/admin.guard';
 import { PromiseLogsService } from './promise-logs.service';
 
 @Controller('promise-logs')

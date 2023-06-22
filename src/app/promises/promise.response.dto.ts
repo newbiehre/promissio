@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { PromiseStatus } from 'src/app/promise/promise.entity';
-import { UserDto } from '../user/user.response.dto';
+import { PromiseStatus } from 'src/app/promises/promise.entity';
+import { UserDto } from '../users/user.response.dto';
 
 export class PromiseDto {
   @Expose()

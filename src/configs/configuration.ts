@@ -1,6 +1,6 @@
 import { PromiseLog } from 'src/app/promise-logs/promise-log.entity';
-import { Promise } from 'src/app/promise/promise.entity';
-import { User } from 'src/app/user/user.entity';
+import { Promise } from 'src/app/promises/promise.entity';
+import { User } from 'src/app/users/user.entity';
 
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,

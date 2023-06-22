@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
 import { Admin1, User1, User2 } from '../../test-utils/utils';
-import { User } from '../user/user.entity';
-import { CreateUserDto } from '../user/user.request.dto';
+import { User } from '../users/user.entity';
+import { CreateUserDto } from '../users/user.request.dto';
 import { AdminService } from './admin.service';
 
 describe('AdminService', () => {
