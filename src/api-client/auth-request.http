@@ -20,11 +20,11 @@ Content-Type: application/json
   "email": "vik@gmail.com",
   "password": "123"
 }
-### signin
-POST http://localhost:3000/auth/signin
+### login
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
   "email": "vik@gmail.com",
-  "password": "123"
+  "password": "123w"
 }

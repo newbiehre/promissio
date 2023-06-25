@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/user.entity';
-import { SigninDto, SignupDto } from '../users/user.request.dto';
+import { LoginDto, SignupDto } from '../users/user.request.dto';
 import { UserService } from '../users/user.service';
 
 export interface AuthResponse {
@@ -38,12 +38,11 @@ export class AuthService {
   async signup(body: SignupDto) {
     const user = await this.userService.create(body);
     this.logger.verbose(`New user created with userId: ${user.id}`);
-    return this.generateJwtToken(user);
   }
 
-  async signin({ email, password }: SigninDto) {
+  async login({ email, password }: LoginDto) {
     const existingUser = await this.userService.findExistingByEmail(email);
-    this.userService.validatePassword(password, existingUser);
+    await this.userService.validatePassword(password, existingUser);
     this.logger.verbose(`Validated user with userId: ${existingUser.id}`);
     return this.generateJwtToken(existingUser);
   }

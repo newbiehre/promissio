@@ -4,48 +4,25 @@ import {
   NestModule,
   ValidationPipe,
 } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './app/admins/admin.module';
 import { AuthModule } from './app/auth/auth.module';
-import { PromiseLog } from './app/promise-logs/promise-log.entity';
 import { PromiseLogsModule } from './app/promise-logs/promise-logs.module';
-import { Promise } from './app/promises/promise.entity';
 import { PromiseModule } from './app/promises/promise.module';
-import { User } from './app/users/user.entity';
 import { UserModule } from './app/users/user.module';
 import { HttpExceptionFilter } from './app/utils/http-exception.filters';
 import { HttpLoggingMiddleware } from './app/utils/logging-middleware';
 import { TypeOrmExceptionFilter } from './app/utils/typeorm-exception.filters';
-import configuration from './configs/configuration';
+import { DatabaseModule } from './configs/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.development.env',
-      isGlobal: true,
-      load: [configuration],
-    }),
+    DatabaseModule,
     AuthModule,
     AdminModule,
     PromiseModule,
     PromiseLogsModule,
     UserModule,
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('database.host'),
-        port: +configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.database'),
-        entities: [User, Promise, PromiseLog],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
   ],
   providers: [
     {

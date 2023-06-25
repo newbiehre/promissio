@@ -1,6 +1,6 @@
-import { PromiseLog } from 'src/app/promise-logs/promise-log.entity';
-import { Promise } from 'src/app/promises/promise.entity';
-import { User } from 'src/app/users/user.entity';
+import { PromiseLog } from '../app/promise-logs/promise-log.entity';
+import { Promise } from '../app/promises/promise.entity';
+import { User } from '../app/users/user.entity';
 
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
@@ -11,8 +11,9 @@ export default () => ({
     port: parseInt(process.env.DB_PORT, 10) || 5432,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    configurationType: process.env.DB_CONFIG_TYPE,
     database: process.env.DB_DATABASE,
-    entities: [User, Promise, PromiseLog],
+    entities: [User, Promise, PromiseLog], //  [__dirname + '/../**/*.entity{.ts,.js}'],
     synchronize: true,
   },
 });

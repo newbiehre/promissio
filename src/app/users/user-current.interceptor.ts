@@ -30,11 +30,7 @@ export class CurrentUserInterceptor implements NestInterceptor {
     try {
       user = await this.userService.findExistingById(currentUserId);
     } catch (error) {
-      this.logger.error(
-        `Cannot find existing user with userId: ${user.id}`,
-        error.stack,
-      );
-      console.error(error);
+      this.logger.error(`Cannot find existing user with userId: ${user?.id}`);
     }
 
     request.currentUser = user;

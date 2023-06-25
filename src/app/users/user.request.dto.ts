@@ -8,7 +8,7 @@ import {
 import { RequiredIfNotNull } from '../utils/required-if-not-null.decorator';
 import { User } from './user.entity';
 
-export class UserLoggingDto {
+export class UserLoggerDto {
   password: string;
 
   constructor(partial: Partial<User>) {
@@ -17,7 +17,7 @@ export class UserLoggingDto {
   }
 }
 
-export class SigninDto {
+export class LoginDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;

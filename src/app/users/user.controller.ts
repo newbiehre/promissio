@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { EnableNonApprovedUser } from './user-enable-nonapproved.decorator';
 import { UserDto, UserProtectedDto } from './user.response.dto';
 import { Serialize } from '../utils/serialize.interceptor';
-import { CurrentUser } from './user-current.decorator';
+import { CurrentUser } from './user.decorator';
 import { User } from './user.entity';
 import { FindUserDto, UpdateUserDto } from './user.request.dto';
 

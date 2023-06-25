@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AdminGuard } from 'src/app/admins/admin.guard';
+import { AdminGuard } from './admin.guard';
 import { AdminService } from './admin.service';
 import { UserAdminProtectedDto } from '../users/user.response.dto';
 import { Serialize } from '../utils/serialize.interceptor';

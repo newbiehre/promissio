@@ -62,7 +62,7 @@ export class AuthGuard implements CanActivate {
       request['currentUserJwt'] = payload;
       isApprovedUser = payload.isApproved;
     } catch (error) {
-      this.logger.error('Unauthorized: issue with token', error.stack);
+      this.logger.error('Unauthorized: issue with token');
       throw new UnauthorizedException('Issue with token');
     }
 

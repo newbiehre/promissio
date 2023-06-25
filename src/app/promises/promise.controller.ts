@@ -14,7 +14,7 @@ import {
   UpdatePromiseDto,
 } from 'src/app/promises/promise.request.dto';
 import { PromiseDto } from 'src/app/promises/promise.response.dto';
-import { CurrentUser } from '../users/user-current.decorator';
+import { CurrentUser } from '../users/user.decorator';
 import { User } from '../users/user.entity';
 import { Serialize } from '../utils/serialize.interceptor';
 import { PromiseService } from './promise.service';
