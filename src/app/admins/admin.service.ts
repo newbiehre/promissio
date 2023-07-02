@@ -4,13 +4,16 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { CreateUserDto } from '../users/user.request.dto';
 import { BaseUserService } from '../utils/base-user.service';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { UserEmitterType, UserEvent } from '../users/user.event';
 
 @Injectable()
 export class AdminService extends BaseUserService {
   constructor(
     @InjectRepository(User) readonly userRepository: Repository<User>,
+    readonly eventEmitter: EventEmitter2,
   ) {
-    super(userRepository);
+    super(userRepository, eventEmitter);
   }
 
   createAdmin(body: CreateUserDto): Promise<User> {
@@ -37,7 +40,10 @@ export class AdminService extends BaseUserService {
     const user: User = await this.findExistingById(id);
     if (user.isApproved === approve) return user;
     user.isApproved = approve;
-    return this.userRepository.save(user);
+    const approvedUser = await this.userRepository.save(user);
+
+    this.emitEvent(UserEmitterType.APPROVE_BY_ADMIN, approvedUser);
+    return approvedUser;
   }
 
   async makeAdmin(id: string, makeAdmin: boolean): Promise<User> {
@@ -45,5 +51,11 @@ export class AdminService extends BaseUserService {
     if (user.isAdmin === makeAdmin) return user;
     user.isAdmin = makeAdmin;
     return this.userRepository.save(user);
+  }
+
+  @OnEvent(`user.${UserEmitterType.APPROVE_BY_ADMIN}`)
+  handleApproveUserEvent(payload: UserEvent) {
+    // send email
+    console.log(payload);
   }
 }

@@ -14,6 +14,8 @@ import { Repository } from 'typeorm';
 import { PromiseLogsService } from '../promise-logs/promise-logs.service';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { PromiseEmitterType, PromiseEvent } from './promise.event';
 
 @Injectable()
 export class PromiseService {
@@ -22,6 +24,7 @@ export class PromiseService {
     private readonly promiseRepository: Repository<Promise>,
     private readonly userService: UserService,
     private readonly promiseLogService: PromiseLogsService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private queryMyPromises(currentUserId: string) {
@@ -77,6 +80,7 @@ export class PromiseService {
       executedBy: currentUser,
       createdAt: savedPromise.createdAt,
     });
+    this.emitEvent(PromiseEmitterType.CREATE, savedPromise);
     return savedPromise;
   }
 
@@ -115,7 +119,12 @@ export class PromiseService {
       createdAt: updatedPromise.updatedAt,
     });
 
+    this.emitEvent(PromiseEmitterType.UPDATE, updatedPromise);
     return updatedPromise;
+  }
+
+  private emitEvent(eventType: PromiseEmitterType, promise: Promise) {
+    this.eventEmitter.emit(eventType, new PromiseEvent(promise));
   }
 
   private isNewPromiseStatusValid(
@@ -156,5 +165,11 @@ export class PromiseService {
         break;
     }
     return valid;
+  }
+
+  @OnEvent('promise.*')
+  handlePromiseUpdateAndCreation(payload: PromiseEvent) {
+    // send email
+    console.log(payload);
   }
 }

@@ -9,6 +9,8 @@ import { scrypt as _scrypt, randomBytes } from 'crypto';
 import { Repository } from 'typeorm';
 import { promisify } from 'util';
 import { User } from '../users/user.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserEmitterType, UserEvent } from '../users/user.event';
 
 const scrypt = promisify(_scrypt);
 
@@ -24,6 +26,7 @@ class CreateUserParams {
 export abstract class BaseUserService {
   constructor(
     @InjectRepository(User) protected readonly userRepository: Repository<User>,
+    protected readonly eventEmitter: EventEmitter2,
   ) {}
 
   async findExistingById(id: string): Promise<User> {
@@ -74,5 +77,9 @@ export abstract class BaseUserService {
     const hash = (await scrypt(password, salt, 32)) as Buffer;
     if (storedHash !== hash.toString('hex'))
       throw new BadRequestException('Bad password');
+  }
+
+  protected emitEvent(eventType: UserEmitterType, user: User) {
+    this.eventEmitter.emit(eventType, new UserEvent(user));
   }
 }

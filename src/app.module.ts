@@ -14,6 +14,7 @@ import { HttpExceptionFilter } from './app/utils/http-exception.filters';
 import { HttpLoggingMiddleware } from './app/utils/logging-middleware';
 import { TypeOrmExceptionFilter } from './app/utils/typeorm-exception.filters';
 import { DatabaseModule } from './configs/database.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DatabaseModule } from './configs/database.module';
     PromiseModule,
     PromiseLogsModule,
     UserModule,
+    EventEmitterModule.forRoot(),
   ],
   providers: [
     {

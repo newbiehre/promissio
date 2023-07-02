@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { BaseUserService } from '../utils/base-user.service';
 import { User } from './user.entity';
 import { SignupDto, UpdateUserDto } from './user.request.dto';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { UserEmitterType, UserEvent } from './user.event';
 
 @Injectable()
 export class UserService extends BaseUserService {
@@ -11,8 +13,9 @@ export class UserService extends BaseUserService {
 
   constructor(
     @InjectRepository(User) readonly userRepository: Repository<User>,
+    readonly eventEmitter: EventEmitter2,
   ) {
-    super(userRepository);
+    super(userRepository, eventEmitter);
   }
 
   createUser(body: SignupDto): Promise<User> {
@@ -40,22 +43,32 @@ export class UserService extends BaseUserService {
     currentUserId: string,
   ) {
     const existingUser = await this.findExistingById(currentUserId);
-    this.logger.log('Updating  user with', body);
+    this.logger.log('Updating user with', body);
 
     const existingUserToUpdate = {
       ...existingUser,
       ...body,
     };
 
+    let updatedUser = null;
     if (oldPassword && newPassword) {
       await this.validatePassword(oldPassword, existingUser);
       const hashedPassword = await this.hashPassword(newPassword);
-      return this.userRepository.save({
+      updatedUser = this.userRepository.save({
         ...existingUserToUpdate,
         password: hashedPassword,
       });
     } else {
-      return this.userRepository.save(existingUserToUpdate);
+      updatedUser = this.userRepository.save(existingUserToUpdate);
     }
+
+    this.emitEvent(UserEmitterType.UPDATE, existingUserToUpdate);
+    return updatedUser;
+  }
+
+  @OnEvent(`user.${UserEmitterType.UPDATE}`)
+  handleApproveUserEvent(payload: UserEvent) {
+    // send email
+    console.log(payload);
   }
 }
